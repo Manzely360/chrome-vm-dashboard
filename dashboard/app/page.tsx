@@ -7,6 +7,7 @@ import VMCard from '@/components/VMCard';
 import ServerCard from '@/components/ServerCard';
 import CreateVMModal from '@/components/CreateVMModal';
 import CreateServerModal from '@/components/CreateServerModal';
+import PresetServerModal from '@/components/PresetServerModal';
 import ScriptModal from '@/components/ScriptModal';
 import { VM, Server, ScriptJob, CreateServerRequest } from '@/types';
 
@@ -16,6 +17,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showServerModal, setShowServerModal] = useState(false);
+  const [showPresetModal, setShowPresetModal] = useState(false);
   const [showScriptModal, setShowScriptModal] = useState(false);
   const [selectedVM, setSelectedVM] = useState<VM | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -244,13 +246,22 @@ export default function Dashboard() {
                 <PlusIcon className="h-4 w-4 mr-2" />
                 Add VM
               </button>
-              <button
-                onClick={() => setShowServerModal(true)}
-                className="btn btn-secondary"
-              >
-                <ServerIcon className="h-4 w-4 mr-2" />
-                Add Server
-              </button>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => setShowPresetModal(true)}
+                  className="btn btn-primary"
+                >
+                  <ServerIcon className="h-4 w-4 mr-2" />
+                  Quick Deploy
+                </button>
+                <button
+                  onClick={() => setShowServerModal(true)}
+                  className="btn btn-secondary"
+                >
+                  <ServerIcon className="h-4 w-4 mr-2" />
+                  Custom Server
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -344,13 +355,22 @@ export default function Dashboard() {
               </div>
               <h3 className="mt-4 text-lg font-medium text-gray-900">No servers found</h3>
               <p className="mt-2 text-gray-500">Add your first server to start managing VMs.</p>
-              <button
-                onClick={() => setShowServerModal(true)}
-                className="mt-4 btn btn-primary"
-              >
-                <ServerIcon className="h-4 w-4 mr-2" />
-                Add Server
-              </button>
+              <div className="mt-4 space-x-3">
+                <button
+                  onClick={() => setShowPresetModal(true)}
+                  className="btn btn-primary"
+                >
+                  <ServerIcon className="h-4 w-4 mr-2" />
+                  Quick Deploy
+                </button>
+                <button
+                  onClick={() => setShowServerModal(true)}
+                  className="btn btn-secondary"
+                >
+                  <ServerIcon className="h-4 w-4 mr-2" />
+                  Custom Server
+                </button>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -378,6 +398,12 @@ export default function Dashboard() {
       <CreateServerModal
         isOpen={showServerModal}
         onClose={() => setShowServerModal(false)}
+        onCreate={createServer}
+      />
+
+      <PresetServerModal
+        isOpen={showPresetModal}
+        onClose={() => setShowPresetModal(false)}
         onCreate={createServer}
       />
 

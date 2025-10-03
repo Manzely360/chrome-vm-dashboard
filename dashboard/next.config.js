@@ -9,8 +9,24 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'http://localhost:3001/api/:path*',
+        source: '/api/vms',
+        destination: 'https://chrome-vm-hosting-production.up.railway.app/api/vms',
+      },
+      {
+        source: '/api/servers',
+        destination: 'https://chrome-vm-hosting-production.up.railway.app/api/servers',
+      },
+      {
+        source: '/api/health',
+        destination: 'https://chrome-vm-hosting-production.up.railway.app/health',
+      },
+      {
+        source: '/api/run',
+        destination: 'https://chrome-vm-hosting-production.up.railway.app/run',
+      },
+      {
+        source: '/api/browser/:path*',
+        destination: 'https://chrome-vm-hosting-production.up.railway.app/browser/:path*',
       },
     ];
   },
