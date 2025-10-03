@@ -1,0 +1,15 @@
+# DigitalOcean Terraform Variables
+# Copy this to terraform.tfvars and fill in your values
+
+# Get your API token from: https://cloud.digitalocean.com/account/api/tokens
+do_token = "your-digitalocean-api-token-here"
+
+# Get your SSH key fingerprint with: doctl compute ssh-key list
+ssh_key_fingerprint = "your-ssh-key-fingerprint-here"
+
+# Optional: Customize these
+region = "nyc1"                    # nyc1, sfo3, fra1, etc.
+size = "s-1vcpu-1gb"              # $6/month - s-1vcpu-1gb, s-2vcpu-2gb, etc.
+image = "ubuntu-22-04-x64"        # Ubuntu 22.04
+vm_count = 3                       # Number of VMs to create
+

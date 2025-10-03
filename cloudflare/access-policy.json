@@ -1,0 +1,74 @@
+{
+  "name": "Chrome VM Dashboard Access Policy",
+  "description": "Access control policy for Chrome VM Dashboard",
+  "rules": [
+    {
+      "name": "Dashboard Access",
+      "description": "Allow access to main dashboard",
+      "action": "allow",
+      "resources": [
+        {
+          "host": "dashboard.your-domain.com",
+          "path": "/*"
+        }
+      ],
+      "access_rules": [
+        {
+          "type": "email",
+          "emails": ["admin@your-domain.com"]
+        }
+      ]
+    },
+    {
+      "name": "API Access",
+      "description": "Allow access to backend API",
+      "action": "allow",
+      "resources": [
+        {
+          "host": "api.your-domain.com",
+          "path": "/*"
+        }
+      ],
+      "access_rules": [
+        {
+          "type": "email",
+          "emails": ["admin@your-domain.com"]
+        }
+      ]
+    },
+    {
+      "name": "VM NoVNC Access",
+      "description": "Allow access to VM NoVNC interfaces",
+      "action": "allow",
+      "resources": [
+        {
+          "host": "novnc-*.your-domain.com",
+          "path": "/*"
+        }
+      ],
+      "access_rules": [
+        {
+          "type": "email",
+          "emails": ["admin@your-domain.com", "user@your-domain.com"]
+        }
+      ]
+    },
+    {
+      "name": "VM Agent Access",
+      "description": "Allow access to VM agent APIs",
+      "action": "allow",
+      "resources": [
+        {
+          "host": "agent-*.your-domain.com",
+          "path": "/*"
+        }
+      ],
+      "access_rules": [
+        {
+          "type": "email",
+          "emails": ["admin@your-domain.com"]
+        }
+      ]
+    }
+  ]
+}

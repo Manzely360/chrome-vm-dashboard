@@ -1,0 +1,63 @@
+# Cloudflare Tunnel Configuration for Chrome VM Dashboard
+# This configuration exposes VMs securely through Cloudflare Tunnels
+
+tunnel: chrome-vm-dashboard
+credentials-file: /opt/cloudflared/tunnel-credentials.json
+
+# Ingress rules for different services
+ingress:
+  # Dashboard frontend
+  - hostname: dashboard.your-domain.com
+    service: http://localhost:3000
+    originRequest:
+      httpHostHeader: dashboard.your-domain.com
+
+  # Backend API
+  - hostname: api.your-domain.com
+    service: http://localhost:3001
+    originRequest:
+      httpHostHeader: api.your-domain.com
+
+  # VM NoVNC access (wildcard for dynamic VM IDs)
+  - hostname: "novnc-*.your-domain.com"
+    service: http://localhost:6080
+    originRequest:
+      httpHostHeader: "novnc-{subdomain}.your-domain.com"
+
+  # VM Agent API access (wildcard for dynamic VM IDs)
+  - hostname: "agent-*.your-domain.com"
+    service: http://localhost:3000
+    originRequest:
+      httpHostHeader: "agent-{subdomain}.your-domain.com"
+
+  # Catch-all rule (must be last)
+  - service: http-status:404
+
+# Global configuration
+originRequest:
+  # Disable TLS verification for local services
+  noTLSVerify: true
+  
+  # Connection settings
+  connectTimeout: 30s
+  tlsTimeout: 10s
+  tcpKeepAlive: 30s
+  
+  # HTTP settings
+  httpHostHeader: ""
+  originServerName: ""
+  
+  # Access control
+  access:
+    required: false
+    teamName: ""
+    audTag: []
+    policies: []
+
+# Logging configuration
+logging:
+  level: info
+  format: json
+
+# Metrics configuration
+metrics: 0.0.0.0:8080

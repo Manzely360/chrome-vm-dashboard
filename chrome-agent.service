@@ -1,0 +1,36 @@
+[Unit]
+Description=Chrome VM Agent
+After=network.target chrome-desktop.service
+Wants=chrome-desktop.service
+
+[Service]
+Type=simple
+User=chromeuser
+Group=chromeuser
+WorkingDirectory=/opt/chrome-agent
+ExecStart=/usr/bin/node agent.js
+Restart=always
+RestartSec=10
+Environment=NODE_ENV=production
+Environment=DISPLAY=:1
+Environment=HOME=/home/chromeuser
+Environment=USER=chromeuser
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/chrome-agent /home/chromeuser /tmp /var/log/chrome-agent
+ProtectHome=read-only
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=chrome-agent
+
+[Install]
+WantedBy=multi-user.target

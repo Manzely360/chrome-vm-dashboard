@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # Backend API
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - FRONTEND_URL=http://localhost:3000
+      - DOMAIN_NAME=localhost
+      - LOG_LEVEL=debug
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - ./backend/data:/app/data
+      - ./backend/logs:/app/logs
+    depends_on:
+      - database
+    restart: unless-stopped
+
+  # Frontend Dashboard
+  frontend:
+    build: ./dashboard
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+    volumes:
+      - ./dashboard:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Database (SQLite in volume)
+  database:
+    image: alpine:latest
+    volumes:
+      - ./backend/data:/data
+    command: /bin/sh -c "mkdir -p /data && touch /data/chrome_vm.db && tail -f /dev/null"
+    restart: unless-stopped
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+
+volumes:
+  redis_data:

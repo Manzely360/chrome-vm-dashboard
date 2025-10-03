@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  # Backend API
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - FRONTEND_URL=http://localhost:3000
+      - DOMAIN_NAME=localhost
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - ./backend/data:/app/data
+    restart: unless-stopped
+
+  # Frontend Dashboard
+  frontend:
+    build: ./dashboard
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+    volumes:
+      - ./dashboard:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Chrome VM 1
+  chrome-vm-1:
+    build: ./docker-vm
+    container_name: chrome-vm-1
+    ports:
+      - "6081:6080"  # NoVNC port
+      - "3011:3000"  # Agent API port
+    environment:
+      - DISPLAY=:1
+      - NODE_ENV=production
+      - VM_ID=vm-1
+    volumes:
+      - chrome-data-1:/home/chromeuser/.config/google-chrome
+    restart: unless-stopped
+    privileged: true
+    shm_size: 2gb
+
+  # Chrome VM 2
+  chrome-vm-2:
+    build: ./docker-vm
+    container_name: chrome-vm-2
+    ports:
+      - "6082:6080"  # NoVNC port
+      - "3012:3000"  # Agent API port
+    environment:
+      - DISPLAY=:1
+      - NODE_ENV=production
+      - VM_ID=vm-2
+    volumes:
+      - chrome-data-2:/home/chromeuser/.config/google-chrome
+    restart: unless-stopped
+    privileged: true
+    shm_size: 2gb
+
+  # Chrome VM 3
+  chrome-vm-3:
+    build: ./docker-vm
+    container_name: chrome-vm-3
+    ports:
+      - "6083:6080"  # NoVNC port
+      - "3013:3000"  # Agent API port
+    environment:
+      - DISPLAY=:1
+      - NODE_ENV=production
+      - VM_ID=vm-3
+    volumes:
+      - chrome-data-3:/home/chromeuser/.config/google-chrome
+    restart: unless-stopped
+    privileged: true
+    shm_size: 2gb
+
+volumes:
+  chrome-data-1:
+  chrome-data-2:
+  chrome-data-3:

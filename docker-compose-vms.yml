@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # Chrome VM 1
+  chrome-vm-1:
+    build: ./docker-vm
+    platform: linux/amd64
+    container_name: chrome-vm-1
+    ports:
+      - "6081:6080"  # NoVNC port
+      - "3002:3000"  # Agent API port
+    environment:
+      - DISPLAY=:1
+      - NODE_ENV=production
+      - VM_ID=vm-1
+    volumes:
+      - chrome-data-1:/home/chromeuser/.config/google-chrome
+      - ./docker-vm/agent.js:/opt/chrome-agent/agent.js
+    restart: unless-stopped
+    networks:
+      - chrome-vm-network
+
+  # Chrome VM 2
+  chrome-vm-2:
+    build: ./docker-vm
+    platform: linux/amd64
+    container_name: chrome-vm-2
+    ports:
+      - "6082:6080"  # NoVNC port
+      - "3003:3000"  # Agent API port
+    environment:
+      - DISPLAY=:1
+      - NODE_ENV=production
+      - VM_ID=vm-2
+    volumes:
+      - chrome-data-2:/home/chromeuser/.config/google-chrome
+      - ./docker-vm/agent.js:/opt/chrome-agent/agent.js
+    restart: unless-stopped
+    networks:
+      - chrome-vm-network
+
+  # Chrome VM 3
+  chrome-vm-3:
+    build: ./docker-vm
+    platform: linux/amd64
+    container_name: chrome-vm-3
+    ports:
+      - "6083:6080"  # NoVNC port
+      - "3004:3000"  # Agent API port
+    environment:
+      - DISPLAY=:1
+      - NODE_ENV=production
+      - VM_ID=vm-3
+    volumes:
+      - chrome-data-3:/home/chromeuser/.config/google-chrome
+      - ./docker-vm/agent.js:/opt/chrome-agent/agent.js
+    restart: unless-stopped
+    networks:
+      - chrome-vm-network
+
+  # Nginx reverse proxy for VMs
+  nginx-vms:
+    image: nginx:alpine
+    container_name: nginx-vms
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx-vms.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - chrome-vm-1
+      - chrome-vm-2
+      - chrome-vm-3
+    restart: unless-stopped
+    networks:
+      - chrome-vm-network
+
+volumes:
+  chrome-data-1:
+  chrome-data-2:
+  chrome-data-3:
+
+networks:
+  chrome-vm-network:
+    driver: bridge
