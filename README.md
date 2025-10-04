@@ -1,6 +1,12 @@
 # Chrome VM Dashboard
 
-A complete browser farm dashboard system that allows you to create and manage Ubuntu VMs with Chrome browsers, run automated scripts via Puppeteer, and control VMs through NoVNC web interfaces.
+A complete browser farm dashboard system that allows you to create and manage Chrome VMs in the cloud, run automated scripts via Puppeteer, and control VMs through NoVNC web interfaces.
+
+## 🚀 Live Deployment
+
+**Frontend Dashboard**: https://chrome-vm-frontend-mp5mog8xn-manzely360-apps.vercel.app  
+**Backend API**: https://pacific-blessing-production.up.railway.app  
+**VM Hosting**: https://chrome-vm-workers.mgmt-5e1.workers.dev
 
 ## 🚀 Features
 
@@ -15,18 +21,18 @@ A complete browser farm dashboard system that allows you to create and manage Ub
 ## 🏗️ Architecture
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Dashboard     │    │   Backend API   │    │   Chrome VMs    │
-│   (Next.js)     │◄──►│   (Express)     │◄──►│   (Ubuntu)      │
-│   Port: 3000    │    │   Port: 3001    │    │   Port: 3000    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  Cloudflare     │    │   Database      │    │   NoVNC         │
-│  Tunnels        │    │   (SQLite)      │    │   Port: 6080    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+┌─────────────────────────────────┐    ┌─────────────────────────────────┐    ┌─────────────────────────────────┐
+│        Frontend Dashboard       │    │         Backend API             │    │        VM Hosting Service       │
+│        (Vercel)                 │◄──►│        (Railway)                │◄──►│     (Cloudflare Workers)        │
+│  chrome-vm-frontend.vercel.app  │    │ pacific-blessing.railway.app    │    │ chrome-vm-workers.workers.dev   │
+└─────────────────────────────────┘    └─────────────────────────────────┘    └─────────────────────────────────┘
+         │                                       │                                       │
+         │                                       │                                       │
+         ▼                                       ▼                                       ▼
+┌─────────────────────────────────┐    ┌─────────────────────────────────┐    ┌─────────────────────────────────┐
+│        Cloudflare CDN           │    │        D1 Database              │    │      Google Cloud VMs           │
+│        (Global Edge)            │    │     (Persistent Storage)        │    │     (Real VM Provisioning)      │
+└─────────────────────────────────┘    └─────────────────────────────────┘    └─────────────────────────────────┘
 ```
 
 ## 📋 Prerequisites
@@ -146,8 +152,8 @@ domain_name = "your-domain.com"
 ### 1. Access the Dashboard
 
 Open your browser and navigate to:
-- **Local**: http://localhost:3000
-- **Production**: https://dashboard.your-domain.com
+- **Live Production**: https://chrome-vm-frontend-mp5mog8xn-manzely360-apps.vercel.app
+- **Local Development**: http://localhost:3000
 
 ### 2. Create a VM
 

@@ -1,7 +1,7 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://chrome-vm-backend-production.up.railway.app';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://pacific-blessing-production.up.railway.app';
 
 export const api = {
-  // VMs
+  // VMs - Basic Operations
   getVMs: () => fetch(`${API_BASE_URL}/api/vms`).then(res => res.json()),
   createVM: (data: any) => fetch(`${API_BASE_URL}/api/vms`, {
     method: 'POST',
@@ -11,11 +11,40 @@ export const api = {
   deleteVM: (id: string) => fetch(`${API_BASE_URL}/api/vms/${id}`, {
     method: 'DELETE'
   }).then(res => res.json()),
-  runScript: (id: string, data: any) => fetch(`${API_BASE_URL}/api/vms/${id}/run-script`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+  getVM: (id: string) => fetch(`${API_BASE_URL}/api/vms/${id}`).then(res => res.json()),
+
+  // VM Management
+  startVM: (id: string) => fetch(`${API_BASE_URL}/api/vms/${id}/start`, {
+    method: 'POST'
   }).then(res => res.json()),
+  stopVM: (id: string) => fetch(`${API_BASE_URL}/api/vms/${id}/stop`, {
+    method: 'POST'
+  }).then(res => res.json()),
+  restartVM: (id: string) => fetch(`${API_BASE_URL}/api/vms/${id}/restart`, {
+    method: 'POST'
+  }).then(res => res.json()),
+  getVMStatus: (id: string) => fetch(`${API_BASE_URL}/api/vms/${id}/status`).then(res => res.json()),
+
+  // Script Execution
+  executeScript: (id: string, data: { scriptName: string; scriptContent: string }) => 
+    fetch(`${API_BASE_URL}/api/vms/${id}/scripts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(res => res.json()),
+  getScripts: (id: string) => fetch(`${API_BASE_URL}/api/vms/${id}/scripts`).then(res => res.json()),
+
+  // Metrics and Monitoring
+  getMetrics: (id: string) => fetch(`${API_BASE_URL}/api/vms/${id}/metrics`).then(res => res.json()),
+  recordMetrics: (id: string, data: { metricType: string; value: number; unit: string }) =>
+    fetch(`${API_BASE_URL}/api/vms/${id}/metrics`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(res => res.json()),
+
+  // Events and Logs
+  getEvents: (id: string) => fetch(`${API_BASE_URL}/api/vms/${id}/events`).then(res => res.json()),
   getVMLogs: (id: string) => fetch(`${API_BASE_URL}/api/vms/${id}/logs`).then(res => res.json()),
 
   // Servers
